@@ -1,0 +1,21 @@
+from flask import Flask,request
+import pickle
+
+with open('model.pkl','rb') as f:
+    ai=pickle.load(f)
+    
+app=Flask(__name__)
+
+@app.route('/')
+def default():
+    return 'AI Server Started'
+
+@app.route('/predict',methods=['GET'])
+def predict():
+    h=float(request.args.get('h'))
+    t=float(request.args.get('t'))
+    result=ai.predict([[h,t]])[0]
+    return result
+
+if __name__=="__main__":
+    app.run(host='0.0.0.0',port=2000)    
